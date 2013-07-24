@@ -10,6 +10,35 @@ do_debug_gdb_extract()
     CT_ExtractPatch GDB
 }
 
+do_debug_gdb_extract() {
+    do_debug_gdb_parts
+
+    if [ "${need_gdb_src}" = "y" ]; then
+        # If using custom directory location, nothing to do
+        if [    "${CT_GDB_CUSTOM}" = "y" \
+             -a -d "${CT_SRC_DIR}/gdb-${CT_GDB_VERSION}" ]; then
+            return 0
+        fi
+        CT_Extract "gdb-${CT_GDB_VERSION}"
+        CT_Patch "gdb" "${CT_GDB_VERSION}"
+    fi
+
+    if [ "${need_ncurses_src}" = "y" ]; then
+        CT_Extract "ncurses-${CT_DEBUG_GDB_NCURSES_VERSION}"
+        CT_DoExecLog ALL chmod -R u+w "${CT_SRC_DIR}/ncurses-${CT_DEBUG_GDB_NCURSES_VERSION}"
+        CT_Patch "ncurses" "${CT_DEBUG_GDB_NCURSES_VERSION}"
+    fi
+
+    if [ "${need_expat_src}" = "y" ]; then
+        CT_Extract "expat-${CT_DEBUG_GDB_EXPAT_VERSION}"
+        CT_Patch "expat" "${CT_DEBUG_GDB_EXPAT_VERSION}"
+    fi
+
+    if [ -n "${CT_ARCH_XTENSA_CUSTOM_OVERLAY_FILE}" ]; then
+        CT_ConfigureXtensa "gdb" "${CT_GDB_VERSION}"
+    fi
+}
+
 do_debug_gdb_build()
 {
     if [ "${CT_GDB_CROSS}" = "y" ]; then
