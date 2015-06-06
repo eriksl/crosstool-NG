@@ -14,6 +14,11 @@ newlib_headers()
         CT_DoExecLog ALL cp -r "${CT_SRC_DIR}/newlib/newlib/libc/sys/xtensa/include/."   \
                                "${CT_HEADERS_DIR}"
     fi
+    if [ "${CT_ARCH_xtensa}" = "y" ]; then
+        CT_DoLog EXTRA "Installing Xtensa headers"
+        CT_DoExecLog ALL cp -r "${CT_SRC_DIR}/newlib-${CT_LIBC_VERSION}/newlib/libc/sys/xtensa/include/."   \
+                               "${CT_HEADERS_DIR}"
+    fi
     CT_EndStep
 }
 
