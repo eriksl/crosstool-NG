@@ -1,0 +1,28 @@
+diff -ur gcc/libgcc/libgcov.h gccB/libgcc/libgcov.h
+--- gcc/libgcc/libgcov.h	2023-05-06 20:48:31.155564879 +0200
++++ gccB/libgcc/libgcov.h	2023-05-06 20:47:56.187061375 +0200
+@@ -507,7 +507,7 @@
+ 
+   struct gcov_kvp *prev_node = NULL;
+   struct gcov_kvp *minimal_node = NULL;
+-  struct gcov_kvp *current_node  = (struct gcov_kvp *)(intptr_t)counters[2];
++  struct gcov_kvp *current_node  = (struct gcov_kvp *)(long long int)counters[2];
+ 
+   while (current_node)
+     {
+@@ -550,13 +550,13 @@
+ #if GCOV_SUPPORTS_ATOMIC
+ 	  if (use_atomic)
+ 	    {
+-	      struct gcov_kvp **ptr = (struct gcov_kvp **)(intptr_t)&counters[2];
++	      struct gcov_kvp **ptr = (struct gcov_kvp **)(long long int)&counters[2];
+ 	      success = !__sync_val_compare_and_swap (ptr, 0, new_node);
+ 	    }
+ 	  else
+ #endif
+ 	    {
+-	      counters[2] = (intptr_t)new_node;
++	      counters[2] = (long long int)new_node;
+ 	      success = 1;
+ 	    }
+ 	}
